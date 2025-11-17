@@ -1034,33 +1034,75 @@ export default {
 @media (max-width: 768px) {
   .game-board {
     padding: 15px;
+    max-width: 100%;
+  }
+
+  .game-header {
+    margin-bottom: 30px;
   }
 
   .game-title {
     font-size: 3rem;
+    letter-spacing: -1.5px;
   }
 
   .game-subtitle {
     font-size: 1rem;
+    margin: 10px 0;
+  }
+
+  .game-info {
+    gap: 20px;
+    font-size: 0.9rem;
   }
 
   .game-stats {
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    margin-bottom: 30px;
   }
 
   .stat-item {
     width: 100%;
-    padding: 20px;
+    padding: 18px 24px;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+  }
+
+  .stat-hint {
+    font-size: 0.85rem;
   }
 
   .input-section {
     flex-direction: column;
+    gap: 12px;
+  }
+
+  .word-input {
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 1rem;
   }
 
   .submit-button {
     width: 100%;
-    padding: 16px;
+    padding: 16px 24px;
+    font-size: 1rem;
+    min-height: 52px; /* Touch-friendly */
+  }
+
+  .results-section {
+    margin-top: 30px;
+  }
+
+  .results-header h2 {
+    font-size: 1.4rem;
   }
 
   .results-table th,
@@ -1078,30 +1120,264 @@ export default {
   }
 
   .graph-cell {
-    width: 120px;
+    width: 80px;
   }
 
   .similarity-bar-container {
-    height: 20px;
+    height: 16px;
+  }
+
+  /* Hide comparison column on tablet */
+  .comparison-cell {
+    display: none;
+  }
+
+  .results-table th:nth-child(4) {
+    display: none;
+  }
+
+  /* Success Modal Mobile */
+  .success-modal {
+    width: 90%;
+    max-width: 400px;
+    padding: 40px 30px;
+  }
+
+  .success-icon {
+    font-size: 4rem;
+    width: 100px;
+    height: 100px;
+  }
+
+  .success-title {
+    font-size: 2rem;
+  }
+
+  .success-stats {
+    gap: 20px;
+  }
+
+  .success-stat-value {
+    font-size: 2rem;
+  }
+
+  .success-stat-label {
+    font-size: 0.9rem;
+  }
+
+  .close-modal-button {
+    padding: 14px 32px;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
+  .game-board {
+    padding: 12px 6px; /* Wider table area */
+  }
+
+  .game-header {
+    margin-bottom: 24px;
+    padding: 0 6px;
+  }
+
   .game-title {
     font-size: 2.5rem;
     letter-spacing: -1px;
+  }
+
+  .game-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .game-info {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+
+  .game-stats {
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 0 6px;
+  }
+
+  .stat-item {
+    padding: 16px 20px;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
   }
 
   .stat-value {
     font-size: 1.6rem;
   }
 
+  .stat-hint {
+    font-size: 0.8rem;
+  }
+
+  .mini-rank-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+
+  .input-section {
+    padding: 0 6px;
+  }
+
+  .word-input {
+    padding: 14px 18px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .submit-button {
+    padding: 14px 20px;
+    min-height: 48px;
+  }
+
+  .error-message {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+
+  .results-section {
+    padding: 0; /* Remove extra padding */
+  }
+
+  .results-title {
+    font-size: 1.2rem;
+    padding: 0 6px;
+  }
+
   .results-table {
     font-size: 0.85rem;
   }
 
+  .results-table th,
+  .results-table td {
+    padding: 10px 4px; /* Reduce padding for more width */
+  }
+
+  .word-cell {
+    font-size: 0.9rem;
+    padding-left: 8px !important; /* A bit more space on the left */
+  }
+
+  .similarity-cell {
+    font-size: 0.9rem;
+  }
+
+  .rank-cell {
+    text-align: center;
+    padding: 10px 2px !important;
+  }
+
+  .rank-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+
   .graph-cell {
+    width: 65px; /* Slightly wider for better visibility */
+    padding-right: 8px !important;
+  }
+
+  .similarity-bar-container {
+    height: 14px;
+    border-radius: 8px;
+  }
+
+  .similarity-bar {
+    border-radius: 8px;
+  }
+
+  /* Hide comparison column on mobile */
+  .comparison-cell {
     display: none;
+  }
+
+  .results-table th:nth-child(4) {
+    display: none;
+  }
+
+  /* Success Modal - Extra Small Screens */
+  .success-modal {
+    width: 95%;
+    padding: 30px 20px;
+  }
+
+  .success-icon {
+    font-size: 3.5rem;
+    width: 90px;
+    height: 90px;
+  }
+
+  .success-title {
+    font-size: 1.8rem;
+    margin: 20px 0 10px;
+  }
+
+  .success-message {
+    font-size: 0.95rem;
+  }
+
+  .success-stats {
+    flex-direction: row;
+    gap: 15px;
+    margin: 24px 0;
+  }
+
+  .success-stat-value {
+    font-size: 1.8rem;
+  }
+
+  .success-stat-label {
+    font-size: 0.85rem;
+  }
+
+  .close-modal-button {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
+
+  .empty-state {
+    padding: 60px 20px;
+  }
+
+  .empty-state p {
+    font-size: 1rem;
+  }
+
+  .help-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .game-title {
+    font-size: 2.2rem;
+  }
+
+  .stat-item {
+    padding: 14px 16px;
+  }
+
+  .success-modal {
+    padding: 24px 16px;
+  }
+
+  .success-title {
+    font-size: 1.6rem;
+  }
+
+  .success-stat-value {
+    font-size: 1.6rem;
   }
 }
 </style>
