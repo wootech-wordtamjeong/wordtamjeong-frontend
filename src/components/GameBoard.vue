@@ -3,12 +3,74 @@
     <!-- Header -->
     <header class="game-header">
       <h1 class="game-title">워드탐정</h1>
-      <p class="game-subtitle">한국어 의미 유사도 게임</p>
+      <div class="subtitle-container">
+        <p class="game-subtitle">한국어 의미 유사도 게임</p>
+        <div class="info-button-wrapper">
+          <button @click="showGuide = true" class="info-button" title="게임 가이드">
+            <span class="info-icon">ⓘ</span>
+          </button>
+          <!-- First-time visitor hint -->
+          <div v-if="showHint" class="hint-arrow">
+            <span class="hint-text">워드탐정이 처음이신가요?</span>
+            <span class="arrow-icon">👆</span>
+          </div>
+        </div>
+      </div>
       <div class="game-info">
         <span class="quiz-date">{{ quizDate }}</span>
         <span class="quiz-number">Quiz #{{ quizId }}</span>
       </div>
     </header>
+
+    <!-- Game Guide Modal -->
+    <div v-if="showGuide" class="guide-modal-overlay" @click="showGuide = false">
+      <div class="guide-modal" @click.stop>
+        <button @click="showGuide = false" class="guide-close-btn">✕</button>
+
+        <div class="guide-icon">🔍</div>
+        <h2 class="guide-title">게임 가이드</h2>
+
+        <div class="guide-content">
+          <section class="guide-section">
+            <h3 class="guide-section-title">📖 게임 방법</h3>
+            <p class="guide-text">
+              매일 새로운 정답 단어가 주어집니다. 단어를 입력하면 정답 단어와의
+              <strong>의미 유사도</strong>를 확인할 수 있습니다.
+            </p>
+            <p class="guide-text">
+              유사도가 높은 단어를 찾아 정답을 추리해보세요!
+            </p>
+          </section>
+
+          <section class="guide-section">
+            <h3 class="guide-section-title">🎯 유사도 산정 방식</h3>
+            <p class="guide-text">
+              AI 언어 모델을 사용하여 두 단어의 <strong>의미적 유사도</strong>를 계산합니다.
+            </p>
+            <ul class="guide-list">
+              <li>단순한 철자나 형태가 아닌 <strong>맥락과 분위기</strong>를 비교합니다</li>
+              <li>0%에서 100% 사이의 점수로 표현됩니다</li>
+              <li>유사도 순위 <strong>200위 안</strong>에 들면 순위가 표시됩니다</li>
+            </ul>
+          </section>
+
+          <section class="guide-section">
+            <h3 class="guide-section-title">💡 팁</h3>
+            <p class="guide-text">
+              때때로 결과가 직관과 다를 수 있지만, AI가 학습한 단어 간의
+              <strong>의미적 연관성</strong>을 반영한 것입니다.
+            </p>
+            <p class="guide-text">
+              다양한 각도로 생각하며 정답에 가까워지는 재미를 느껴보세요!
+            </p>
+          </section>
+        </div>
+
+        <button @click="showGuide = false" class="guide-confirm-btn">
+          이해했어요!
+        </button>
+      </div>
+    </div>
 
     <!-- Game Stats -->
     <div class="game-stats">
@@ -165,6 +227,8 @@ export default {
       isLoading: false,
       errorMessage: '',
       isSuccess: false,
+      showGuide: false,
+      showHint: false,
     }
   },
   computed: {
@@ -280,6 +344,11 @@ export default {
   },
   mounted() {
     this.loadGuesses()
+    // Check if user has seen the guide before
+    const hasSeenGuide = localStorage.getItem('kkomantl_guide_seen')
+    if (!hasSeenGuide) {
+      this.showHint = true
+    }
   },
   watch: {
     quizId() {
@@ -287,6 +356,13 @@ export default {
       this.guesses = []
       this.isSuccess = false
       this.loadGuesses()
+    },
+    showGuide(newVal) {
+      // When guide is opened, hide hint and mark as seen
+      if (newVal) {
+        this.showHint = false
+        localStorage.setItem('kkomantl_guide_seen', 'true')
+      }
     }
   }
 }
@@ -1028,6 +1104,319 @@ export default {
   font-size: 1rem;
   color: var(--color-text-muted);
   font-weight: 300;
+}
+
+/* Info Button & Game Guide Modal */
+.subtitle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.info-button {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  padding: 0;
+  backdrop-filter: blur(10px);
+}
+
+.info-button:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: var(--color-accent-gold);
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+}
+
+.info-icon {
+  font-size: 1rem;
+  color: var(--color-accent-gold);
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* First-time visitor hint */
+.info-button-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hint-arrow {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.95), rgba(245, 158, 11, 0.95));
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5);
+  animation: hintPulse 2s ease-in-out infinite;
+  white-space: nowrap;
+  z-index: 10;
+  border: 2px solid var(--color-accent-gold);
+}
+
+.hint-text {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-bg-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.arrow-icon {
+  font-size: 1.5rem;
+  animation: arrowBounce 1s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 30px rgba(251, 191, 36, 0.7);
+  }
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.guide-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.guide-modal {
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.98), rgba(37, 45, 74, 0.98));
+  border: 2px solid var(--color-accent-cyan);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow:
+    0 0 60px rgba(34, 211, 238, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: modalBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  /* Hide scrollbar */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.guide-modal::-webkit-scrollbar {
+  display: none;
+}
+
+.guide-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #fca5a5;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 0;
+  z-index: 10;
+}
+
+/* Expand clickable area */
+.guide-close-btn::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+  cursor: pointer;
+}
+
+.guide-close-btn:hover {
+  background: rgba(244, 63, 94, 0.3);
+  border-color: var(--color-danger);
+  transform: rotate(90deg) scale(1.1);
+  color: #fecaca;
+}
+
+.guide-icon {
+  font-size: 3.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.6));
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+.guide-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 30px;
+  letter-spacing: -0.5px;
+}
+
+.guide-content {
+  margin-bottom: 30px;
+}
+
+.guide-section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(10, 14, 39, 0.4);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.guide-section:last-child {
+  margin-bottom: 0;
+}
+
+.guide-section-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-accent-cyan);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-text {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  word-break: keep-all;
+}
+
+.guide-text:last-child {
+  margin-bottom: 0;
+}
+
+.guide-text strong {
+  color: var(--color-accent-gold);
+  font-weight: 700;
+}
+
+.guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+}
+
+.guide-list li {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 8px;
+  padding-left: 24px;
+  position: relative;
+  word-break: keep-all;
+}
+
+.guide-list li::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  color: var(--color-accent-cyan);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.guide-list li strong {
+  color: var(--color-accent-gold);
+  font-weight: 700;
+}
+
+.guide-confirm-btn {
+  width: 100%;
+  padding: 16px 32px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-bg-primary);
+  background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-teal));
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 4px 20px rgba(34, 211, 238, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.guide-confirm-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.guide-confirm-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(34, 211, 238, 0.6);
+}
+
+.guide-confirm-btn:hover::before {
+  left: 100%;
+}
+
+.guide-confirm-btn:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
 /* Mobile Responsive */
