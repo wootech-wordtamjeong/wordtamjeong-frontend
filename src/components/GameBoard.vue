@@ -1769,4 +1769,56 @@ export default {
     font-size: 1.6rem;
   }
 }
+
+/* Mobile adjustments for hint arrow */
+@media (max-width: 768px) {
+  .subtitle-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .game-subtitle {
+    order: 1; /* Subtitle first */
+  }
+
+  .info-button-wrapper {
+    order: 2; /* Info button wrapper second */
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    position: static;
+  }
+
+  .info-button {
+    /* Ensure button is visible and clickable */
+    display: flex !important;
+    flex-shrink: 0;
+    z-index: 10;
+    order: 1;
+  }
+
+  .hint-arrow {
+    position: static !important;
+    order: 2;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: auto;
+    max-width: 260px;
+    white-space: normal;
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .hint-text {
+    font-size: 0.85rem;
+  }
+
+  .arrow-icon {
+    font-size: 1.2rem;
+    transform: rotate(180deg); /* Point upward on mobile */
+  }
+}
 </style>
